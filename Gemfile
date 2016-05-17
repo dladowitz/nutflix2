@@ -17,6 +17,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'awesome_print'
   gem 'pry'
   gem 'pry-nav'
   gem 'rspec-rails', '2.99'
@@ -31,4 +32,3 @@ end
 group :production do
   gem 'rails_12factor'
 end
-
