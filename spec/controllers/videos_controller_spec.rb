@@ -7,6 +7,10 @@ describe VideosController do
       get 'index'
       response.should be_success
     end
-  end
 
+    it "returns a collection of all videos in the DB" do
+      get 'index'
+      expect(assigns(:videos)).to eq Video.all
+    end
+  end
 end
