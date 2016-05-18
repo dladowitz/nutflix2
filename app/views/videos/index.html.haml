@@ -3,5 +3,5 @@
     %h3= link_to "All Vidoes"
   .videos.row
     - @videos.each do |video|
-      .video.col-sms2
-        %img(src="#{video.small_cover_url}")
+      .video.col-sm-2
+        %img(src="http://localhost:3000/#{video.small_cover_url}")
