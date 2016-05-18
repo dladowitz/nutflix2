@@ -1,6 +1,11 @@
 class VideosController < ApplicationController
   def index
-    @videos = Video.all
+    @categories = Category.all
+    @categories_w_videos = {}
+
+    @categories.each do |category|
+      @categories_w_videos[category.name] = category.videos.map {|video| video}
+    end
   end
 
   def show

@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe VideosController do
   describe "GET 'index'" do
+    before {
+      action = Category.create(name: "Action")
+      @thor = Video.create(title: "Thor", category: action)
+    }
+
     it "returns http success" do
       get 'index'
       response.should be_success
@@ -12,9 +17,14 @@ describe VideosController do
       expect(response).to render_template :index
     end
 
-    it "returns a collection of all videos in the DB" do
+    it "returns a collection of all categories in the DB" do
       get 'index'
-      expect(assigns(:videos)).to eq Video.all
+      expect(assigns(:categories)).to eq Category.all
+    end
+
+    it "returns a list with categries full of vidoes" do
+      get 'index'
+      expect(assigns(:categories_w_videos)["Action"]).to eq [@thor]
     end
   end
 
