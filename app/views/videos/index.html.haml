@@ -4,4 +4,5 @@
   .videos.row
     - @videos.each do |video|
       .video.col-sm-2
-        %img(src="http://localhost:3000/#{video.small_cover_url}")
+        = link_to video do
+          %img(src="http://localhost:3000/#{video.small_cover_url}")
