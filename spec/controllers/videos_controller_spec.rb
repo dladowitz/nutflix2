@@ -30,7 +30,7 @@ describe VideosController do
 
   describe "GET 'Show'" do
     before {
-      @video = Video.create(title: "Thor")
+      @video = Video.create(title: "Thor", category_id: 2)
     }
 
     it "returns http succss" do
