@@ -1,5 +1,5 @@
 Myflix::Application.routes.draw do
-  get 'categories/show'
+  get 'genre(/:id)', to: "categories#show", as: :categories
 
   # root to: 'videos/index'
   resources :videos, only: [:index, :show]

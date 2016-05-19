@@ -8,7 +8,7 @@ describe CategoriesController do
       @comedy = Category.create(name: "Comedy")
       @thor = Video.create(title: "Thor", category: @action)
       @futurama = Video.create(title: "Futurama", category: @comedy)
-      get 'show', category: { id: @action.id }
+      get 'show', id: @action.id
     end
 
     it "returns http success" do
