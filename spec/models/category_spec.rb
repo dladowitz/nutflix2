@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe Category do
+  it { should have_many :videos }
+
+
   context "with valid arguments" do
     it "creates a valid object" do
       category = Category.create(name: "Comedy")
