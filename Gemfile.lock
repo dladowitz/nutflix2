@@ -128,6 +128,9 @@ GEM
       sprockets-rails (~> 2.0)
     shoulda-matchers (2.7.0)
       activesupport (>= 3.0.0)
+    simple_form (3.2.1)
+      actionpack (> 4, < 5.1)
+      activemodel (> 4, < 5.1)
     slop (3.4.7)
     sprockets (2.11.0)
       hike (~> 1.2)
@@ -176,6 +179,7 @@ DEPENDENCIES
   rspec-rails (= 2.99)
   sass-rails
   shoulda-matchers (= 2.7.0)
+  simple_form
   thin
   uglifier
   vcr (= 2.9.3)

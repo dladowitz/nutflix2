@@ -1,26 +1,12 @@
 %section.register.container
   .row
     .col-sm-10.col-sm-offset-1
-      = form_for @user, :html => {:class => "form-horizontal"} do |f|
+      = simple_form_for(@user, html: { class: 'form-horizontal' }) do |f|
         %header
           %h1 Register
-        %fieldset
-          .form-group
-            %label.control-label.col-sm-2 Email Address
-            .col-sm-6
-              = f.text_field :email, class: "form-control"
-          .form-group
-            %label.control-label.col-sm-2 Password
-            .col-sm-6
-              = f.password_field :password, class: "form-control"
-          .form-group
-            %label.control-label.col-sm-2 Password Confirmation
-            .col-sm-6
-              = f.password_field :password_confirmation, class: "form-control"
-          .form-group
-            %label.control-label.col-sm-2 Full Name
-            .col-sm-6
-              = f.text_field :full_name, class: "form-control"
-        %fieldset.actions.control-group.col-sm-offset-2
-          .controls
-            = f.submit "Sign Up", class: "btn btn-default"
+        = f.input :email, label: "Email Address", input_html: { style: 'width: 50%' }, label_html: {class: 'col-sm-2' }
+        = f.input :password, input_html: { style: 'width: 50%' },  label_html: { class: 'col-sm-2' }
+        = f.input :password_confirmation, input_html: { style: 'width: 50%' },  label_html: { class: 'col-sm-2' }
+        = f.input :full_name, label: "Full Name", input_html: { style: 'width: 50%' }, label_html: {class: 'col-sm-2' }
+        .col-sm-offset-2
+          = f.button :submit, "Sign Up"
