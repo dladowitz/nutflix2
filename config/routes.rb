@@ -8,7 +8,7 @@ Myflix::Application.routes.draw do
   get "ui(/:action)", controller: "ui"
 
   # Resource Routes
-  resources :users, only: [:new ]
+  resources :users, only: [:new, :create]
 
   resources :videos, only: [:index, :show] do
     collection do
