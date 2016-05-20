@@ -1,13 +1,17 @@
 Myflix::Application.routes.draw do
-  root to: "videos#index"
+  root to: "static_pages#front"
 
   # Invdidual Routes
-  get "genre(/:id)",  to: "categories#show", as: :categories
-
+  get "genre(/:id)", to: "categories#show", as: :categories
+  get "register",    to: "users#new", as: :register
+  get "sign_in",     to: "sessions#new", as: :sign_in
   #
   get "ui(/:action)", controller: "ui"
 
   # Resource Routes
+  resources :users, only: [:new, :create]
+  resources :sessions, only: [:new, :create]
+
   resources :videos, only: [:index, :show] do
     collection do
       get "search"

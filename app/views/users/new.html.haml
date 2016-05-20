@@ -1,0 +1,12 @@
+%section.register.container
+  .row
+    .col-sm-10.col-sm-offset-1
+      = simple_form_for(@user, html: { class: 'form-horizontal' }) do |f|
+        %header
+          %h1 Register
+        = f.input :email, label: "Email Address", input_html: { style: 'width: 50%' }, label_html: {class: 'col-sm-2' }
+        = f.input :password, input_html: { style: 'width: 50%' },  label_html: { class: 'col-sm-2' }
+        = f.input :password_confirmation, input_html: { style: 'width: 50%' },  label_html: { class: 'col-sm-2' }
+        = f.input :full_name, label: "Full Name", input_html: { style: 'width: 50%' }, label_html: {class: 'col-sm-2' }
+        .col-sm-offset-2
+          = f.button :submit, "Sign Up"
