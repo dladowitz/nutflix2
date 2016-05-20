@@ -48,4 +48,49 @@ describe VideosController do
       expect(assigns(:video)).to eq @video
     end
   end
+
+  describe "GET 'Search'" do
+    before {
+      @video = Video.create(title: "Thor", category_id: 2)
+      @video2 = Video.create(title: "Thor: Dark World", category_id: 2)
+    }
+
+    it "returns http succss" do
+      get 'search', search: "Thor"
+      response.should be_success
+    end
+
+    it "returns the show template" do
+      get 'search', search: "Thor"
+      expect(response).to render_template :search
+    end
+
+    context "without a search term" do
+      it "returns no results" do
+        get 'search', search: ""
+        expect(assigns(:videos)).to eq []
+      end
+    end
+
+    context "with a search matching one video in the DB" do
+      it "returns one video" do
+        get 'search', search: "Thor: Dark"
+        expect(assigns(:videos)).to eq [@video2]
+      end
+    end
+
+    context "with a search matching no videos in the DB" do
+      it "returns no results" do
+        get 'search', search: "Black Widow"
+        expect(assigns(:videos)).to eq []
+      end
+    end
+
+    context "with a search matching two videos in the DB" do
+      it "returns two results" do
+        get 'search', search: "Thor"
+        expect(assigns(:videos)).to eq [@video, @video2]
+      end
+    end
+  end
 end

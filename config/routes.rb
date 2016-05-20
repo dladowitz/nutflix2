@@ -4,10 +4,14 @@ Myflix::Application.routes.draw do
   # Invdidual Routes
   get "genre(/:id)",  to: "categories#show", as: :categories
 
-  # 
+  #
   get "ui(/:action)", controller: "ui"
 
   # Resource Routes
-  resources :videos, only: [:index, :show]
+  resources :videos, only: [:index, :show] do
+    collection do
+      post "search"
+    end
+  end
 
 end
