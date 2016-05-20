@@ -18,13 +18,17 @@ describe SessionsController do
   end
 
   describe "GET 'create'" do
-    before { @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark") }
+    before do
+       @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
+      subject
+    end
 
     context "with a valid username and password" do
       subject { post 'create', session: { email: "tony@stark_labs.com", password: "asdfasdf" } }
-      before { subject }
 
-      it "renders the home template"
+      it "renders the home template" do
+        expect(response).to redirect_to videos_path
+      end
 
       it "sets the session properly" do
         expect(session[:id]).to eq @tony.id
@@ -32,9 +36,11 @@ describe SessionsController do
     end
 
     context "with a invalid username and password" do
-      subject { get 'create', session: { email: "tony@stark_labs.com", password: "bad password" } }
+      subject { post 'create', session: { email: "tony@stark_labs.com", password: "bad password" } }
 
-      it "re-renders the new template"
+      it "re-renders the new template" do
+        expect(response).to render_template :new
+      end
 
       it "does not set the session" do
         expect(session[:id]).to be_nil
