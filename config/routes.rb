@@ -2,8 +2,8 @@ Myflix::Application.routes.draw do
   root to: "static_pages#front"
 
   # Invdidual Routes
-  get "genre(/:id)",  to: "categories#show", as: :categories
-
+  get "genre(/:id)", to: "categories#show", as: :categories
+  get "register",    to: "users#new", as: :register
   #
   get "ui(/:action)", controller: "ui"
 
