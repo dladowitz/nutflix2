@@ -4,6 +4,7 @@ Myflix::Application.routes.draw do
   # Invdidual Routes
   get "genre(/:id)", to: "categories#show", as: :categories
   get "register",    to: "users#new", as: :register
+  get "sign_in",     to: "sessions#new", as: :sign_in
   #
   get "ui(/:action)", controller: "ui"
 
