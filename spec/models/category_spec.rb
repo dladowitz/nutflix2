@@ -40,11 +40,20 @@ describe Category do
 
     context "when there are 6 or less videos in the category" do
 
-      it "returns the exact number of videos in the category"
+      it "returns the exact number of videos in the category" do
+        expect(subject.count).to eq 5
+      end
     end
 
     context "when there are more than 6 vidoes in the category" do
-      it "returns only 6 videos"
+      before do
+        Video.create(title: "Iron Man 6", category: @action)
+        Video.create(title: "Iron Man 7", category: @action)
+      end
+
+      it "returns only 6 videos" do
+        expect(subject.count).to eq 6
+      end
     end
   end
 end

@@ -5,6 +5,6 @@ class Category < ActiveRecord::Base
 
   # Instance Methods
   def recent_videos
-    videos.order(created_at: :desc)#.limit(11)
+    videos.order(created_at: :desc).limit(6)
   end
 end
