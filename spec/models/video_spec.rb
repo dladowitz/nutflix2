@@ -41,6 +41,10 @@ describe Video do
       it "returns one video" do
         expect(subject).to eq [@video]
       end
+
+      it "is case insensative" do
+        expect(Video.search_by_title "captaiN aMerica: ciVil War").to eq [@video]
+      end
     end
 
     context "when one video matches a partial search term" do

@@ -10,7 +10,7 @@ Myflix::Application.routes.draw do
   # Resource Routes
   resources :videos, only: [:index, :show] do
     collection do
-      post "search"
+      get "search"
     end
   end
 

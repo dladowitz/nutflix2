@@ -5,6 +5,7 @@ class Video < ActiveRecord::Base
 
   # Class Methods
   def self.search_by_title(search_term)
-    Video.where("title LIKE ?", "%#{search_term}%")
+    # This is case insensative
+    Video.where("lower(title) LIKE ?", "%#{search_term.downcase}%")
   end
 end
