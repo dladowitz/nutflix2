@@ -1,5 +1,5 @@
 Myflix::Application.routes.draw do
-  root to: "videos#index"
+  root to: "static_pages#front"
 
   # Invdidual Routes
   get "genre(/:id)",  to: "categories#show", as: :categories
