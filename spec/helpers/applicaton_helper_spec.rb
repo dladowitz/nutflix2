@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe ApplicationHelper do
-  describe "#current_user" do
-    before do
-      @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
-    end
+  before do
+    @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
+  end
 
+  describe "#current_user" do
     context "when a user is logged in" do
       before { session[:id] = @tony.id }
 
