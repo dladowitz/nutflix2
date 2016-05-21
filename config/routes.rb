@@ -3,6 +3,7 @@ Myflix::Application.routes.draw do
 
   # Invdidual Routes
   get "genre(/:id)", to: "categories#show",  as: :categories
+  get "home",        to: "videos#index",     as: :home
   get "register",    to: "users#new",        as: :register
   get "sign_in",     to: "sessions#new",     as: :sign_in
   delete "sign_out", to: "sessions#destroy", as: :sign_out

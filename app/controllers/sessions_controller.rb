@@ -3,6 +3,10 @@ class SessionsController < ApplicationController
   skip_before_filter :verify_user, except: :destroy
 
   def new
+    if current_user
+      flash[:danger] = "You are already signed in."
+      redirect_to home_path
+    end
   end
 
   def create
