@@ -1,8 +1,11 @@
 require 'spec_helper'
 
 describe SessionsController do
-  describe "GET 'new'" do
+  before do
+    @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
+  end
 
+  describe "GET 'new'" do
     context "with a valid username and password" do
       subject { get 'new', session: { email: "tony@stark_labs.com", password: "asdfasdf" } }
       before { subject }
@@ -18,10 +21,7 @@ describe SessionsController do
   end
 
   describe "GET 'create'" do
-    before do
-       @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
-      subject
-    end
+    before { subject }
 
     context "with a valid username and password" do
       subject { post 'create', session: { email: "tony@stark_labs.com", password: "asdfasdf" } }
@@ -44,6 +44,33 @@ describe SessionsController do
 
       it "does not set the session" do
         expect(session[:id]).to be_nil
+      end
+    end
+  end
+
+  describe "DELETE 'destroy'" do
+    subject { delete 'destroy' }
+
+    context "when a user is signed in" do
+      before do
+        session[:id] = @tony.id
+        subject
+      end
+
+      it "sets the session[:id] to nil" do
+        expect(session[:id]).to be_nil
+      end
+
+      it "renders the sign_in template" do
+        expect(response).to render_template :new
+      end
+    end
+
+    context "when a user is not signed in" do
+      before { subject }
+      
+      it "renders the sign_in template" do
+        expect(response).to render_template :new
       end
     end
   end
