@@ -27,7 +27,10 @@ describe UsersController do
         expect{ subject }.to change { User.count }.by 1
       end
 
-      it "renders the sign in template"
+      it "renders the sign in template" do
+        subject
+        expect(response).to redirect_to root_path
+      end
     end
 
     context "with invalid params" do
