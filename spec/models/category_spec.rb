@@ -34,14 +34,14 @@ describe Category do
     subject { @action.recent_videos }
 
     it "retunrs the videos in reverse chronological creation order" do
-      expect(subject.first.id).to eq @videos.last.id
-      expect(subject.last.id).to eq @videos.first.id
+      expect(subject).to start_with @videos.last
+      expect(subject).to end_with @videos.first
     end
 
     context "when there are 6 or less videos in the category" do
 
       it "returns the exact number of videos in the category" do
-        expect(subject.count).to eq 5
+        expect(subject).to have(5).items
       end
     end
 
@@ -52,7 +52,7 @@ describe Category do
       end
 
       it "returns only 6 videos" do
-        expect(subject.count).to eq 6
+        expect(subject).to have(6).items
       end
     end
   end

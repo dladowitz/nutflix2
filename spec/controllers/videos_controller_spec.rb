@@ -98,7 +98,7 @@ describe VideosController do
       context "without a search term" do
         it "returns no results" do
           get 'search', search: ""
-          expect(assigns(:videos)).to eq []
+          expect(assigns(:videos)).to be_empty
         end
       end
 
@@ -112,14 +112,14 @@ describe VideosController do
       context "with a search matching no videos in the DB" do
         it "returns no results" do
           get 'search', search: "Black Widow"
-          expect(assigns(:videos)).to eq []
+          expect(assigns(:videos)).to be_empty
         end
       end
 
       context "with a search matching two videos in the DB" do
         it "returns two results" do
           get 'search', search: "Thor"
-          expect(assigns(:videos)).to eq [@thor, @thor2]
+          expect(assigns(:videos)).to have(2).items
         end
       end
     end
