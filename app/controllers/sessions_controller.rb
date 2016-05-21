@@ -17,6 +17,17 @@ class SessionsController < ApplicationController
     end
   end
 
+  def destroy
+    if session[:id]
+      session[:id] = nil
+      flash.now[:success] = "Bye Bye. Have fun storming the castle."
+    else
+      flash.now[:danger] = "Errr, you can't log out when you aren't logged in. That's science."
+    end
+
+    render :new
+  end
+
   private
 
   def session_params
