@@ -5,7 +5,7 @@ module ApplicationHelper
 
   def verify_user
     unless current_user
-      flash.now[:danger] = "Slow down there, you need to sign in first."
+      flash[:danger] = "Slow down there, you need to sign in first."
       redirect_to sign_in_path
     end
   end
