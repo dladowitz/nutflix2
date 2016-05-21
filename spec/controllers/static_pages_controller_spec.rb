@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe StaticPagesController do
-
   describe "GET 'front'" do
     it "returns http success" do
       get 'front'
@@ -13,5 +12,4 @@ describe StaticPagesController do
       expect(response).to render_template :front
     end
   end
-
 end

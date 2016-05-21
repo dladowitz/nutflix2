@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [:create]
+  skip_before_filter :verify_user, except: :destroy
 
   def new
   end
@@ -18,12 +19,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    if session[:id]
-      session[:id] = nil
-      flash.now[:success] = "Bye Bye. Have fun storming the castle."
-    else
-      flash.now[:danger] = "Errr, you can't log out when you aren't logged in. That's science."
-    end
+    session[:id] = nil
+    flash.now[:success] = "Bye Bye. Have fun storming the castle."
 
     render :new
   end
