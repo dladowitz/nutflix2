@@ -27,6 +27,13 @@ describe ReviewsController do
     end
 
     context "with no logged in user" do
+      subject  { post 'create', review: { video_id: video, rating: 5, user_id: user, text: "This was a great movie"}}
+
+      it { should redirect_to sign_in_path }
+
+      it "does not add a review to the DB" do
+        expect{ subject }.not_to change{ Review.count }
+      end
     end
   end
 end
