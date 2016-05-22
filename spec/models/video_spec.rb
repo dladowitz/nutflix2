@@ -44,4 +44,19 @@ describe Video do
       it { should eq [video1, video2] }
     end
   end
+
+  describe "#average_rating" do
+    subject { video1.average_rating }
+
+    context "when there are reviews of the vidoe" do
+      let!(:rating1) { Fabricate(:review, rating: 5, video: video1)}
+      let!(:rating2) { Fabricate(:review, rating: 4, video: video1)}
+
+      it { should eq 4.5 }
+    end
+
+    context "when there are no reviews of the vidoe" do
+      it { should eq 0 }
+    end
+  end
 end

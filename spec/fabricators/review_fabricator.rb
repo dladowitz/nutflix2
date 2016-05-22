@@ -1,6 +1,6 @@
 Fabricator(:review) do
-  user   nil
-  video  nil
-  rating 1
-  text   "MyText"
+  user
+  video
+  rating [1,2,3,4,5].sample
+  text   { Faker::StarWars.quote }
 end

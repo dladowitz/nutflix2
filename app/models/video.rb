@@ -9,4 +9,13 @@ class Video < ActiveRecord::Base
     # This is case insensative
     Video.where("lower(title) LIKE ?", "%#{search_term.downcase}%")
   end
+
+  # Instance Methods
+  def average_rating
+    if reviews.any?
+      reviews.average(:rating).round(1)
+    else
+      0
+    end
+  end
 end
