@@ -1,18 +1,16 @@
 require 'spec_helper'
 
 describe VideosController do
-  before do
-    @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
-    action = Category.create(name: "Action")
-    @thor = Video.create(title: "Thor", category: action)
-  end
+  let(:tony) { User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark") }
+  let(:action) { Category.create(name: "Action") }
+  let!(:thor) { Video.create(title: "Thor", category: action) }
 
   describe "GET 'index'" do
     subject { get 'index' }
 
     context "with a logged in user" do
       before do
-        session[:id] = @tony.id
+        session[:id] = tony.id
         subject
       end
 
@@ -29,7 +27,7 @@ describe VideosController do
       end
 
       it "returns a list with categries full of vidoes" do
-        expect(assigns(:categories_w_videos)["Action"]).to eq [@thor]
+        expect(assigns(:categories_w_videos)["Action"]).to eq [thor]
       end
     end
 
@@ -44,11 +42,11 @@ describe VideosController do
   end
 
   describe "GET 'Show'" do
-    subject { get 'show', id: @thor.id }
+    subject { get 'show', id: thor.id }
 
     context "with a logged in user" do
       before {
-        session[:id] = @tony.id
+        session[:id] = tony.id
         subject
       }
 
@@ -61,7 +59,7 @@ describe VideosController do
       end
 
       it "returns the correct video" do
-        expect(assigns(:video)).to eq @thor
+        expect(assigns(:video)).to eq thor
       end
     end
 
@@ -76,13 +74,11 @@ describe VideosController do
   end
 
   describe "GET 'Search'" do
-    before {
-      @thor2 = Video.create(title: "Thor: Dark World", category_id: 2)
-    }
+    let!(:thor2) { Video.create(title: "Thor: Dark World", category_id: 2) }
 
     context "with a logged in user" do
       before {
-        session[:id] = @tony.id
+        session[:id] = tony.id
       }
 
       it "returns http succss" do
@@ -92,20 +88,20 @@ describe VideosController do
 
       it "returns the show template" do
         get 'search', search: "Thor"
-        expect(response).to render_template :search
+        response.should render_template :search
       end
 
       context "without a search term" do
         it "returns no results" do
           get 'search', search: ""
-          expect(assigns(:videos)).to be_empty
+          assigns(:videos).should be_empty
         end
       end
 
       context "with a search matching one video in the DB" do
         it "returns one video" do
           get 'search', search: "Thor: Dark"
-          expect(assigns(:videos)).to eq [@thor2]
+          expect(assigns(:videos)).to eq [thor2]
         end
       end
 

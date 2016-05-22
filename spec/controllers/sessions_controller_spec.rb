@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe SessionsController do
-  before do
-    @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
-  end
+  let!(:tony) { User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark") }
 
   describe "GET 'new'" do
     context "with a valid username and password" do
@@ -31,7 +29,7 @@ describe SessionsController do
       end
 
       it "sets the session properly" do
-        expect(session[:id]).to eq @tony.id
+        expect(session[:id]).to eq tony.id
       end
     end
 
@@ -53,7 +51,7 @@ describe SessionsController do
 
     context "when a user is signed in" do
       before do
-        session[:id] = @tony.id
+        session[:id] = tony.id
         subject
       end
 

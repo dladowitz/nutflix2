@@ -2,19 +2,17 @@ require 'spec_helper'
 
 describe CategoriesController do
   describe "GET 'show'" do
-    before do
-      @action = Category.create(name: "Action")
-      @comedy = Category.create(name: "Comedy")
-      @thor = Video.create(title: "Thor", category: @action)
-      @futurama = Video.create(title: "Futurama", category: @comedy)
-      @tony = User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")
-    end
+    let(:action)   { Category.create(name: "Action") }
+    let(:comedy)   { Category.create(name: "Comedy") }
+    let(:thor)     { Video.create(title: "Thor", category: action)}
+    let(:futurama) { Video.create(title: "Futurama", category: @comedy)}
+    let(:tony)    { User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark")}
 
-    subject { get 'show', id: @action.id }
+    subject { get 'show', id: action.id }
 
     context "with a logged in user" do
       before {
-        session[:id] = @tony.id
+        session[:id] = tony.id
         subject
       }
 
@@ -23,15 +21,15 @@ describe CategoriesController do
       end
 
       it "finds the correct category" do
-        expect(assigns(:category).name).to eq @action.name
+        expect(assigns(:category).name).to eq action.name
       end
 
       it "finds the videos in that category" do
-        expect(assigns(:videos)).to eq [@thor]
+        expect(assigns(:videos)).to eq [thor]
       end
 
       it "does not find vidoes in other categories" do
-        expect(assigns(:videos)).not_to include @futurama
+        expect(assigns(:videos)).not_to include futurama
       end
     end
 
