@@ -5,6 +5,7 @@ describe Video do
 
 
   it { should belong_to :category }
+  it { should have_many :reviews }
   it { should validate_presence_of :title }
   it { should validate_presence_of :category_id }
   it { should be_instance_of Video }
@@ -41,6 +42,21 @@ describe Video do
 
       # "returns both videos"
       it { should eq [video1, video2] }
+    end
+  end
+
+  describe "#average_rating" do
+    subject { video1.average_rating }
+
+    context "when there are reviews of the vidoe" do
+      let!(:rating1) { Fabricate(:review, rating: 5, video: video1)}
+      let!(:rating2) { Fabricate(:review, rating: 4, video: video1)}
+
+      it { should eq 4.5 }
+    end
+
+    context "when there are no reviews of the vidoe" do
+      it { should eq 0 }
     end
   end
 end

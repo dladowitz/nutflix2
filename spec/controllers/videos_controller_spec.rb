@@ -60,6 +60,15 @@ describe VideosController do
       it "returns the correct video" do
         expect(assigns(:video)).to eq video
       end
+
+      it "creates new review" do
+        expect(assigns(:review)).to be_instance_of Review
+      end
+
+      it "has a correcty associated review" do
+        expect(assigns(:review).video).to eq video
+        expect(assigns(:review).user).to eq user
+      end
     end
 
     context "with no user logged in" do

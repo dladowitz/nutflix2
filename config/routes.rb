@@ -13,6 +13,7 @@ Myflix::Application.routes.draw do
 
   # Resource Routes
   resources :users, only: [:new, :create]
+  resources :reviews, only: [:create]
   resources :sessions, only: [:new, :create, :destroy]
 
   resources :videos, only: [:index, :show] do

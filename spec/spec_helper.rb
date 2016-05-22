@@ -11,6 +11,7 @@ require 'rspec/rails'
 # end with _spec.rb. You can configure this pattern with with the --pattern
 # option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+include ControllerSpecHelpers
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -24,7 +25,7 @@ RSpec.configure do |config|
   # config.mock_with :mocha
   # config.mock_with :flexmock
   # config.mock_with :rr
-  
+
   # Redirect deprecation warnings
   config.deprecation_stream = File.open('deprecations.txt', 'w')
 
