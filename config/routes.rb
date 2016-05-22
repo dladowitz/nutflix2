@@ -12,7 +12,6 @@ Myflix::Application.routes.draw do
   get "ui(/:action)", controller: "ui"
 
   # Resource Routes
-  resources :users, only: [:new, :create]
   resources :reviews, only: [:create]
   resources :sessions, only: [:new, :create, :destroy]
 
@@ -22,4 +21,8 @@ Myflix::Application.routes.draw do
     end
   end
 
+  # Nested Resources
+  resources :users, only: [:new, :create] do
+    resources :queue_items, only: [:new]
+  end
 end
