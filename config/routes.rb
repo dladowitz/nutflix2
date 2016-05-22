@@ -23,6 +23,6 @@ Myflix::Application.routes.draw do
 
   # Nested Resources
   resources :users, only: [:new, :create] do
-    resources :queue_items, only: [:new]
+    resources :queue_items, only: [:index, :new]
   end
 end
