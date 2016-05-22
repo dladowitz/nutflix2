@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe SessionsController do
-  let!(:tony) { User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark") }
+  let!(:user) { Fabricate(:user) }
 
   describe "GET 'new'" do
     context "with a valid username and password" do
-      subject { get 'new', session: { email: "tony@stark_labs.com", password: "asdfasdf" } }
+      subject { get 'new', session: { email: user.email, password: user.password } }
       before { subject }
 
       it "returns http success" do
@@ -22,19 +22,19 @@ describe SessionsController do
     before { subject }
 
     context "with a valid username and password" do
-      subject { post 'create', session: { email: "tony@stark_labs.com", password: "asdfasdf" } }
+      subject { post 'create', session: { email: user.email, password: user.password } }
 
       it "renders the home template" do
         expect(response).to redirect_to videos_path
       end
 
       it "sets the session properly" do
-        expect(session[:id]).to eq tony.id
+        expect(session[:id]).to eq user.id
       end
     end
 
     context "with a invalid username and password" do
-      subject { post 'create', session: { email: "tony@stark_labs.com", password: "bad password" } }
+      subject { post 'create', session: { email: user.email, password: "bad password" } }
 
       it "re-renders the new template" do
         expect(response).to render_template :new
@@ -51,7 +51,7 @@ describe SessionsController do
 
     context "when a user is signed in" do
       before do
-        session[:id] = tony.id
+        session[:id] = user.id
         subject
       end
 

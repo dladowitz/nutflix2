@@ -1,16 +1,15 @@
 require 'spec_helper'
 
 describe VideosController do
-  let(:tony) { User.create(email: "tony@stark_labs.com", password: "asdfasdf", password_confirmation: "asdfasdf", full_name: "Tony Stark") }
-  let(:action) { Category.create(name: "Action") }
-  let!(:thor) { Video.create(title: "Thor", category: action) }
+  let(:user) { Fabricate(:user) }
+  let!(:video) { Fabricate(:video)}
 
   describe "GET 'index'" do
     subject { get 'index' }
 
     context "with a logged in user" do
       before do
-        session[:id] = tony.id
+        session[:id] = user.id
         subject
       end
 
@@ -27,7 +26,7 @@ describe VideosController do
       end
 
       it "returns a list with categries full of vidoes" do
-        expect(assigns(:categories_w_videos)["Action"]).to eq [thor]
+        expect(assigns(:categories_w_videos)["#{video.category.name}"]).to eq [video]
       end
     end
 
@@ -42,11 +41,11 @@ describe VideosController do
   end
 
   describe "GET 'Show'" do
-    subject { get 'show', id: thor.id }
+    subject { get 'show', id: video.id }
 
     context "with a logged in user" do
       before {
-        session[:id] = tony.id
+        session[:id] = user.id
         subject
       }
 
@@ -59,7 +58,7 @@ describe VideosController do
       end
 
       it "returns the correct video" do
-        expect(assigns(:video)).to eq thor
+        expect(assigns(:video)).to eq video
       end
     end
 
@@ -74,20 +73,20 @@ describe VideosController do
   end
 
   describe "GET 'Search'" do
-    let!(:thor2) { Video.create(title: "Thor: Dark World", category_id: 2) }
+    let!(:video2) { Fabricate(:video, title: video.title + ": 2") }
 
     context "with a logged in user" do
       before {
-        session[:id] = tony.id
+        session[:id] = user.id
       }
 
       it "returns http succss" do
-        get 'search', search: "Thor"
+        get 'search', search: video.title
         response.should be_success
       end
 
       it "returns the show template" do
-        get 'search', search: "Thor"
+        get 'search', search: video.title
         response.should render_template :search
       end
 
@@ -100,8 +99,8 @@ describe VideosController do
 
       context "with a search matching one video in the DB" do
         it "returns one video" do
-          get 'search', search: "Thor: Dark"
-          expect(assigns(:videos)).to eq [thor2]
+          get 'search', search: video2.title
+          expect(assigns(:videos)).to eq [video2]
         end
       end
 
@@ -114,7 +113,7 @@ describe VideosController do
 
       context "with a search matching two videos in the DB" do
         it "returns two results" do
-          get 'search', search: "Thor"
+          get 'search', search: video.title
           expect(assigns(:videos)).to have(2).items
         end
       end
@@ -122,7 +121,7 @@ describe VideosController do
 
     context "with no user logged in" do
       it "redirects_to the sign_in_path" do
-        get 'search', search: "Thor"
+        get 'search', search: video.title
         expect(response).to redirect_to sign_in_path
         expect(flash[:danger]).to eq "Slow down there, you need to sign in first."
       end
