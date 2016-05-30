@@ -1,18 +1,18 @@
 %section#top-header.row
-  %h1.col-md-2
-    = current_user ? (link_to "NutFlix", videos_path) : (link_to "NutFlix", root_path)
-  %ul.col-md-4.clearfix
-    %li= link_to "Videos", videos_path
-    %li= link_to "My Queue", user_queue_items_path(current_user)
-    %li= link_to "People"
-  %form.col-md-5.navbar-form{action: "/videos/search", method: "get"}
-    .form-group
-      %input.form-control(name="search" type="text" placeholder="Search for videos here")
-    %button.btn.btn-default(type="submit") Search
-  #user_links.pull-right
-    %ul
-      %li.dropdown
-        - if current_user
+  - if current_user
+    %h1.col-md-2
+      = link_to "NutFlix", videos_path
+    %ul.col-md-4.clearfix
+      %li= link_to "Videos", videos_path
+      %li= link_to "My Queue", user_queue_items_path(current_user)
+      %li= link_to "People"
+    %form.col-md-5.navbar-form{action: "/videos/search", method: "get"}
+      .form-group
+        %input.form-control(name="search" type="text" placeholder="Search for videos here")
+      %button.btn.btn-default(type="submit") Search
+    #user_links.pull-right
+      %ul
+        %li.dropdown
           %a(href="#" id="dlabel" role="button" data-toggle="dropdown" class="dropdown-toggle" data-target="#")
             = "Welcome, #{current_user.full_name}"
             %b.caret
@@ -21,7 +21,14 @@
               = link_to "Account", "#"
               = link_to "Plan and Billing", "#"
               = link_to "Sign Out", sign_out_path, method: :delete
-        - else
+
+  - else
+    %h1.col-md-2
+      = link_to "NutFlix", root_path
+
+    #user_links.pull-right
+      %ul
+        %li.dropdown
           %a(href="#" id="dlabel" role="button" data-toggle="dropdown" class="dropdown-toggle" data-target="#")
             Welcome, Guest
             %b.caret

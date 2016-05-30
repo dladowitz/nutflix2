@@ -38,7 +38,7 @@ class QueueItemsController < ApplicationController
       flash[:dabger] = "Sorry we coudn't find the correct video in your queue."
     end
 
-    render :index
+    redirect_to user_queue_items_path(current_user)
   end
 
   private
