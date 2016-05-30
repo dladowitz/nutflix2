@@ -10,7 +10,7 @@ describe QueueItemsController do
       before { login_user user }
 
       context "when the user has one item in their queue" do
-        let!(:queue_item) { Fabricate(:queue_item, user: user) }
+        let!(:queue_item_1) { Fabricate(:queue_item, user: user) }
         before { subject }
 
         it "returns http success" do
@@ -22,7 +22,28 @@ describe QueueItemsController do
         end
 
         it "finds all the user's queue_items" do
-          expect(assigns(:queue_items)).to eq [queue_item]
+          expect(assigns(:queue_items)).to eq [queue_item_1]
+        end
+      end
+
+      context "when the user has multiple items in their queue" do
+        let!(:queue_item_1) { Fabricate(:queue_item, user: user) }
+        let!(:queue_item_2) { Fabricate(:queue_item, user: user) }
+
+        it "finds all the user's queue_items" do
+          subject
+          expect(assigns(:queue_items)).to eq [queue_item_1, queue_item_2]
+        end
+
+        context "when the user as in-active queue_items" do
+          before do
+            queue_item_1.update_attributes(active: false)
+            subject
+          end
+
+          it "does not find the inactive items" do
+            expect(assigns(:queue_items)).to eq [queue_item_2]
+          end
         end
       end
 
