@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe QueueItemsController do
-  let(:user)       { Fabricate(:user) }
+  let(:user) { Fabricate(:user) }
 
   describe "GET 'index'" do
     subject { get 'index', user_id: user.id }
@@ -38,12 +38,38 @@ describe QueueItemsController do
       end
     end
 
-    context "with no logged in user" do 
-    end
+    context "with no logged in user" do
+      it "shoulds redirect to the sign_in_path"
 
+    end
   end
 
   describe "POST 'create'" do
+    let(:video) { Fabricate(:video) }
+    subject { post 'create', user_id: user.id, queue_item: { video_id: video.id } }
+
+    context "with a logged in user" do
+      before { login_user user }
+      
+      context "when the user has no other queue items" do
+        it "should add a queue_item to the DB" do
+          expect{ subject }.to change{ QueueItem.count }.by 1
+        end
+
+        it "should create a queue item with position of one"
+      end
+
+      context "when the user has one other queue_item" do
+        it "should create a queue item with position of two"
+      end
+    end
+
+    context "with no logged in user" do
+      it "shoulds redirect to the sign_in_path"
+
+    end
+
+
   end
 
   describe "DELETE 'destroy'" do
