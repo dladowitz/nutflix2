@@ -28,6 +28,19 @@ class QueueItemsController < ApplicationController
     end
   end
 
+  def destroy
+    queue_item = QueueItem.find_by_id params[:id]
+
+    if queue_item && queue_item.user == current_user
+      flash[:success] = "#{queue_item.video.title} removed from your queue."
+      queue_item.update_attributes active: false
+    else
+      flash[:dabger] = "Sorry we coudn't find the correct video in your queue."
+    end
+
+    render :index
+  end
+
   private
 
   def queue_items_params
