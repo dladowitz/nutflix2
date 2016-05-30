@@ -9,16 +9,16 @@
 # Use rake db:reset, which drops the database and runs this seed file
 
 # Users
-10.times { Fabricate(:user) }
-User.first.update(email: "david@ladowitz.com")
+10.times { Fabricate(:user); puts "Created User: #{User.last.full_name}" }
+User.first.update(email: "david@ladowitz.com"); puts "Updated first user's email to be david@ladowitz.com for signing purposes"
 
 # Categories
-action = Category.create(name: "Action")
-comedy = Category.create(name: "Comedy")
-drama = Category.create(name: "Drama")
+action = Category.create(name: "Action"); puts "Created Category: Action"
+comedy = Category.create(name: "Comedy"); puts "Created Category: Comedy"
+drama = Category.create(name: "Drama"); puts "Created Category: Drama"
 
 # Videos
-50.times { Fabricate(:video, category: (Category.find Category.ids.sample)) }
+50.times { Fabricate(:video, category: (Category.find Category.ids.sample)); puts "Created Video: #{Video.last.title}" }
 
 
 # Video.create(title: "Family Guy", category: action, small_cover_url: "tmp/family_guy.jpg", large_cover_url: "tmp/monk_large.jpg", description: "The wacky, occasionally irreverent misadventures of a Rhode Island family whose number includes a morbidly obese moron; his martini loving, genius dog; his sexpot wife; his gigantic thirteen year old son; his whiny, awkward daughter; and his homicidal infant son.")
@@ -27,4 +27,7 @@ drama = Category.create(name: "Drama")
 # Video.create(title: "Futurama",  category: comedy, small_cover_url: "tmp/futurama.jpg", large_cover_url: "tmp/monk_large.jpg", description: "Pizza boy Philip J. Fry awakens in the 31st century after 1,000 years of cryogenic preservation in this animated series. After he gets a job at an interplanetary delivery service, Fry embarks on ridiculous escapades to make sense of his predicament.")
 
 # Reviews
-200.times { Review.create(video_id: Video.ids.sample, user_id: User.ids.sample, rating: [1,2,3,4,5].sample, text: Faker::Hacker.say_something_smart ) }
+200.times { Review.create(video_id: Video.ids.sample, user_id: User.ids.sample, rating: [1,2,3,4,5].sample, text: Faker::Hacker.say_something_smart ); puts "Created Review with text: #{Review.last.text}" }
+
+# Queue items
+100.times { QueueItem.create(video_id: Video.ids.sample, user_id: User.ids.sample); puts "Created QueueItem for #{QueueItem.last.user.full_name} with position of #{QueueItem.last.position}" }
