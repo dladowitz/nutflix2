@@ -39,8 +39,10 @@ describe QueueItemsController do
     end
 
     context "with no logged in user" do
-      it "shoulds redirect to the sign_in_path"
-
+      it "shoulds redirect to the sign_in_path" do
+        subject
+        expect(response).to redirect_to sign_in_path
+      end
     end
   end
 
@@ -50,26 +52,34 @@ describe QueueItemsController do
 
     context "with a logged in user" do
       before { login_user user }
-      
+
       context "when the user has no other queue items" do
         it "should add a queue_item to the DB" do
           expect{ subject }.to change{ QueueItem.count }.by 1
         end
 
-        it "should create a queue item with position of one"
+        it "should create a queue item with position of one" do
+          subject
+          expect(QueueItem.last.position).to eq 1
+        end
       end
 
       context "when the user has one other queue_item" do
-        it "should create a queue item with position of two"
+        before { Fabricate(:queue_item, user: user) }
+
+        it "should create a queue item with position of two" do
+          subject
+          expect(QueueItem.last.position).to eq 2
+        end
       end
     end
 
     context "with no logged in user" do
-      it "shoulds redirect to the sign_in_path"
-
+      it "shoulds redirect to the sign_in_path" do
+        subject
+        expect(response).to redirect_to sign_in_path
+      end
     end
-
-
   end
 
   describe "DELETE 'destroy'" do
