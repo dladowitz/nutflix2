@@ -39,7 +39,7 @@ describe QueueItem do
       let!(:queue_item_3) { Fabricate(:queue_item, user: user) }
 
       context "when deleting the first queue time" do
-        subject { queue_item_1.destroy }
+        subject { queue_item_1.update_attributes(active: false) }
 
         it "should reset the position of all other itmes correctly" do
           subject
@@ -49,7 +49,7 @@ describe QueueItem do
       end
 
       context "when deleting an item in the middle of the queue" do
-        subject { queue_item_2.destroy }
+        subject { queue_item_2.update_attributes(active: false) }
 
         it "should not reset the position of the first item" do
           subject
@@ -63,4 +63,5 @@ describe QueueItem do
       end
     end
   end
+
 end

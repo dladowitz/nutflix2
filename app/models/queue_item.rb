@@ -5,7 +5,7 @@ class QueueItem < ActiveRecord::Base
   validates :user, :video, presence: true
 
   before_create :set_position
-  before_destroy :reorder_quue_positions
+  before_update :reorder_queue_positions, if: :active_changed?
 
   private
 
@@ -13,11 +13,14 @@ class QueueItem < ActiveRecord::Base
     self.position = user.queue_items.count + 1
   end
 
-  def reorder_quue_positions
-    position = self.position
-    last_items = user.queue_items.drop(position)
-    last_items.each do |item|
-      item.update_attributes(position: item.position - 1)
+  def reorder_queue_positions
+    if self.active == false
+      position = self.position
+      last_items = user.queue_items.drop(position)
+
+      last_items.each do |item|
+        item.update_attributes(position: item.position - 1)
+      end
     end
   end
 end

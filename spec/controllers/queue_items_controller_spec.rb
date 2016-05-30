@@ -83,31 +83,33 @@ describe QueueItemsController do
   end
 
   describe "DELETE 'destroy'" do
-    let(:queue_item) { Fabricate(:queue_item, user: user) }
-    subject { delete 'destroy', id: queue_item.id, user_id: user.id }
+    let!(:queue_item_1) { Fabricate(:queue_item, user: user) }
+    subject { delete 'destroy', id: queue_item_1.id, user_id: user.id }
 
     context "with a logged in user" do
       before { login_user user }
 
       it "should change the queue item to in-active" do
-        expect{ subject }.to change{ queue_item.reload.active }.to false
+        expect{ subject }.to change{ queue_item_1.reload.active }.to false
       end
 
       context "when a user tries to deactivate someone else's queue item" do
         let!(:queue_item_2) { Fabricate(:queue_item) }
+        subject { delete 'destroy', id: queue_item_2.id, user_id: user.id }
 
         it "should not change the status of the queue item" do
-          delete 'destroy', id: queue_item_2.id, user_id: user.id
+          subject
           expect(queue_item_2.reload.active).to be true
         end
       end
 
       context "when the user has more than one queue items" do
-        let(:queue_item_2) { Fabricate(:queue_item, user: user) }
+        let!(:queue_item_2) { Fabricate(:queue_item, user: user) }
+        subject { delete 'destroy', id: queue_item_1.id, user_id: user.id }
 
         it "should reorder the positions of all the remaining queue items" do
-          subject 
-          expect(queue_item_2.position).to eq 1
+          subject
+          expect(queue_item_2.reload.position).to eq 1
         end
       end
     end
