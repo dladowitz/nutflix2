@@ -101,6 +101,15 @@ describe QueueItemsController do
           expect(queue_item_2.reload.active).to be true
         end
       end
+
+      context "when the user has more than one queue items" do
+        let(:queue_item_2) { Fabricate(:queue_item, user: user) }
+
+        it "should reorder the positions of all the remaining queue items" do
+          subject 
+          expect(queue_item_2.position).to eq 1
+        end
+      end
     end
 
     context "without a logged in user" do
