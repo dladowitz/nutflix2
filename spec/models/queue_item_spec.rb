@@ -3,7 +3,6 @@ require 'spec_helper'
 describe QueueItem do
   it { should belong_to :user }
   it { should belong_to :video }
-  # it { should validate_presence_of :position }
   it { should validate_presence_of :user }
   it { should validate_presence_of :video }
 
@@ -12,7 +11,7 @@ describe QueueItem do
     let(:video) { Fabricate(:video) }
     subject { QueueItem.create(user: user, video: video)}
 
-    it "sets active to true" do
+    it "sets active to true by default" do
       expect(subject.active).to be_true
     end
 
