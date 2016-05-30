@@ -25,7 +25,7 @@ Myflix::Application.routes.draw do
   resources :users, only: [:new, :create] do
     resources :queue_items, only: [:index, :create, :destroy] do
       collection do
-        get "reorder"
+        post "reorder"
       end
     end
   end

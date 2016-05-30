@@ -5,7 +5,7 @@
         %header
           %h2 My Queue
 
-        = form_tag reorder_user_queue_items_path(current_user) do
+        = form_tag reorder_user_queue_items_path(current_user), method: :post do
           %table.table
             %thead
               %tr
@@ -19,7 +19,7 @@
               - @queue_items.each do |queue_item|
                 %tr
                   %td
-                    = number_field_tag :position, queue_item.position, class: "form-control", data: {:queue_item_id => queue_item.id }
+                    = number_field_tag "queue[#{queue_item.id}]", queue_item.position, class: "form-control", data: {:queue_item_id => queue_item.id }
                   %td
                     = link_to queue_item.video.title, queue_item.video
                   %td
@@ -38,3 +38,4 @@
                       %i.glyphicon.glyphicon-remove
 
           = submit_tag "Update Instant Queue", class: "btn btn-default"
+          -# 'product[prop_hash][][name]'

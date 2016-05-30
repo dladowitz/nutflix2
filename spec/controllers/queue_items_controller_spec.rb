@@ -142,4 +142,44 @@ describe QueueItemsController do
       end
     end
   end
+
+  describe "POST reorder" do
+    let!(:queue_item_1) { Fabricate(:queue_item, user: user) }
+    let!(:queue_item_2) { Fabricate(:queue_item, user: user) }
+    let!(:queue_item_3) { Fabricate(:queue_item, user: user) }
+    let!(:queue_item_4) { Fabricate(:queue_item, user: user) }
+
+    subject { post 'reorder', user_id: user.id, queue: { queue_item_1.id => 1, queue_item_2.id => 2, queue_item_3.id => 2 , queue_item_4.id => 4 } }
+
+    context "with a logged in user" do
+      before { login_user user }
+
+      it "redirects to the index page" do
+        subject
+        expect(response).to redirect_to user_queue_items_path user
+      end
+
+      context "when a user resets the position of the third item" do
+        it "sets the position of the third item to 2" do
+          subject
+          expect(queue_item_3.reload.position).to eq 2
+        end
+
+        # it "sets the position of the second item to 3" do
+        #   subject
+        #   expect(queue_item_2.reload.position).to eq 3
+        # end
+        #
+        # it "leaves the position of the first item alone" do
+        #   subject
+        #   expect(queue_item_1.reload.position).to eq 1
+        # end
+        #
+        # it "leaves the position of the last item alone" do
+        #   subject
+        #   expect(queue_item_4.reload.position).to eq 4
+        # end
+      end
+    end
+  end
 end
