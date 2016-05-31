@@ -41,7 +41,8 @@ class QueueItem < ActiveRecord::Base
       last_items = user.queue_items.drop(position)
 
       last_items.each do |item|
-        #update_attribute doesn't call validations
+
+        #update_attribute doesn't call validations. Validation was causing infinite loop.
         item.update_attribute(:position, item.position - 1)
       end
     end

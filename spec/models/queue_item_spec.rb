@@ -21,17 +21,29 @@ describe QueueItem do
       end
     end
 
-    context "when the user has one other active queue item" do
-      before { QueueItem.create(user: user, video: video) }
+    context "when the user has other active queue items" do
+      let!(:queue_item_1) { QueueItem.create(user: user, video: video, position: 1) }
+      let!(:queue_item_2) { QueueItem.create(user: user, video: video, position: 2) }
+      let!(:queue_item_3) { QueueItem.create(user: user, video: video, position: 3) }
+      let!(:queue_item_4) { QueueItem.create(user: user, video: video, position: 4) }
+      let!(:queue_item_5) { QueueItem.create(user: user, video: video, position: 5) }
 
       it "sets the position to 2" do
-        expect(subject.position).to eq 2
+        expect(subject.position).to eq 6
       end
 
-      it "forces all items in a users queue to unique positions" do
-        queue_item_2 = QueueItem.create(user: user, video: video, position: 2)
+      it "does not allow multiple items in a users queue with the same position" do
         queue_item_2.update_attributes(position: 1)
         expect(queue_item_2.reload.position).not_to eq 1
+      end
+
+      it "reorders the queue items properyly when moving an item up the list" do
+        queue_item_2.update_attributes(position: 4)
+        expect(user.active_queue_items).to eq [queue_item_1, queue_item_3, queue_item_4, queue_item_2, queue_item_5]
+      end
+      it "reorders the queue items properyly when moving an item down the list" do
+        queue_item_4.update_attributes(position: 2)
+        expect(user.active_queue_items).to eq [queue_item_1, queue_item_4, queue_item_2, queue_item_3, queue_item_5]
       end
     end
   end
