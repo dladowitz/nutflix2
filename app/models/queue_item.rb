@@ -1,6 +1,6 @@
 class PositionValidator < ActiveModel::Validator
   def validate(record)
-    if record.user
+    if record.user && record.active
       active_items = record.user.active_queue_items
       active_positions = active_items.pluck :position
 
@@ -20,7 +20,14 @@ class QueueItem < ActiveRecord::Base
   validates_with PositionValidator
 
   before_create :set_position
+
+  # This is used for deactivating a queue_item.
+  # TODO create a deactive method
   before_update :reorder_queue_positions, if: :active_changed?
+
+  def inactive
+    self.active == false
+  end
 
   private
 
@@ -34,7 +41,8 @@ class QueueItem < ActiveRecord::Base
       last_items = user.queue_items.drop(position)
 
       last_items.each do |item|
-        item.update_attributes(position: item.position - 1)
+        #update_attribute doesn't call validations
+        item.update_attribute(:position, item.position - 1)
       end
     end
   end
