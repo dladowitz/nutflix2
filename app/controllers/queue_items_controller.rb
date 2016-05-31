@@ -2,7 +2,7 @@ class QueueItemsController < ApplicationController
   before_action :set_user, only: [:index, :create, :reorder]
   def index
     if @user
-      @queue_items = @user.active_queue_items
+      @queue_items = @user.active_queue_items.order(:position)
     else
       flash[:danger] = "Couldn't find correct user."
       redirect_to home_path

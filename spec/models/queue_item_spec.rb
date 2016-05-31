@@ -3,13 +3,14 @@ require 'spec_helper'
 describe QueueItem do
   it { should belong_to :user }
   it { should belong_to :video }
+  # it { should validate_presence_of :position }
   it { should validate_presence_of :user }
   it { should validate_presence_of :video }
 
   context "When a user is creating queue items" do
     let(:user) { Fabricate(:user) }
     let(:video) { Fabricate(:video) }
-    subject { QueueItem.create(user: user, video: video)}
+    subject { QueueItem.create(user: user, video: video) }
 
     it "sets active to true by default" do
       expect(subject.active).to be_true
@@ -24,8 +25,14 @@ describe QueueItem do
     context "when the user has one other active queue item" do
       before { QueueItem.create(user: user, video: video) }
 
-      it "sets teh position to 2" do
+      it "sets the position to 2" do
         expect(subject.position).to eq 2
+      end
+
+      it "forces all items in a users queue to unique positions" do
+        queue_item_2 = QueueItem.create(user: user, video: video, position: 2)
+        queue_item_2.update_attributes(position: 1)
+        expect(queue_item_2.reload.position).not_to eq 1
       end
     end
   end
