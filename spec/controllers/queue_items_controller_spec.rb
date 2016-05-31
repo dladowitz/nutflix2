@@ -148,6 +148,7 @@ describe QueueItemsController do
     let!(:queue_item_2) { Fabricate(:queue_item, user: user) }
     let!(:queue_item_3) { Fabricate(:queue_item, user: user) }
     let!(:queue_item_4) { Fabricate(:queue_item, user: user) }
+    let!(:queue_item_5) { Fabricate(:queue_item, user: user) }
 
     subject { post 'reorder', user_id: user.id, queue: { queue_item_1.id => 1, queue_item_2.id => 2, queue_item_3.id => 2 , queue_item_4.id => 4 } }
 
@@ -165,20 +166,21 @@ describe QueueItemsController do
           expect(queue_item_3.reload.position).to eq 2
         end
 
-        # it "sets the position of the second item to 3" do
-        #   subject
-        #   expect(queue_item_2.reload.position).to eq 3
-        # end
-        #
-        # it "leaves the position of the first item alone" do
-        #   subject
-        #   expect(queue_item_1.reload.position).to eq 1
-        # end
-        #
-        # it "leaves the position of the last item alone" do
-        #   subject
-        #   expect(queue_item_4.reload.position).to eq 4
-        # end
+        it "sets the position of the second item to 3" do
+          subject
+          expect(queue_item_2.reload.position).to eq 3
+        end
+
+        it "leaves the position of the first item alone" do
+          subject
+          expect(queue_item_1.reload.position).to eq 1
+        end
+
+        it "leaves the position of the items after the change alone" do
+          subject
+          expect(queue_item_4.reload.position).to eq 4
+          expect(queue_item_5.reload.position).to eq 5
+        end
       end
     end
   end

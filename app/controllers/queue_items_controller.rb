@@ -41,6 +41,34 @@ class QueueItemsController < ApplicationController
   end
 
   def reorder
+    params[:queue].each do |queue_item_id, form_position|
+      queue_item = QueueItem.find queue_item_id
+      form_position = form_position.to_i
+      puts "Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}"
+
+      if queue_item.position != form_position
+        items_after_insertion = @user.queue_items.where("position >= ?", form_position)
+
+        items_after_insertion.each do |item|
+
+          unless item == queue_item
+            puts "Before Update Queue Item Video: #{item.video.title} at position #{item.position}"
+            item.update_attributes(position: item.position + 1)
+            puts "After Update Queue Item Video: #{item.video.title} at position #{item.position}"
+          else
+            puts "Before Update Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}"
+            queue_item.update_attributes(position: form_position)
+            puts "After Update Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}"
+
+            break
+          end
+        end
+
+        break
+      end
+    end
+
+
     redirect_to user_queue_items_path @user
   end
 
