@@ -6,4 +6,8 @@ class User < ActiveRecord::Base
   has_many :reviews
 
   has_secure_password
+
+  def active_queue_items
+    self.queue_items.where(active: true).order(:position)
+  end
 end
