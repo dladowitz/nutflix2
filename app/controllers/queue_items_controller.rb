@@ -31,36 +31,46 @@ class QueueItemsController < ApplicationController
     queue_item = QueueItem.find_by_id params[:id]
 
     if queue_item && queue_item.user == current_user
-      flash[:success] = "#{queue_item.video.title} removed from your queue."
+      flash[:success] = "#{queue_item.video.title} removed from your queue." if @debug
       queue_item.update_attributes active: false
     else
-      flash[:dabger] = "Sorry we coudn't find the correct video in your queue."
+      flash[:dabger] = "Sorry we coudn't find the correct video in your queue." if @debug
     end
 
     redirect_to user_queue_items_path(current_user)
   end
 
   def reorder
-    params[:queue].each do |queue_item_id, form_position|
+    params[:queue].each do |queue_item_id, new_position|
       queue_item = QueueItem.find queue_item_id
-      form_position = form_position.to_i
-      puts "Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}"
+      new_position = new_position.to_i
+      puts "Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}" if @debug
 
-      if queue_item.position != form_position
-        items_after_insertion = @user.queue_items.where("position >= ?", form_position)
+      if queue_item.position != new_position
+        moved_item = queue_item
 
-        items_after_insertion.each do |item|
+        if new_position > moved_item.position
+          direction = "down"
+        else
+          direction = "up"
+        end
 
-          unless item == queue_item
-            puts "Before Update Queue Item Video: #{item.video.title} at position #{item.position}"
-            item.update_attributes(position: item.position + 1)
-            puts "After Update Queue Item Video: #{item.video.title} at position #{item.position}"
-          else
-            puts "Before Update Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}"
-            queue_item.update_attributes(position: form_position)
-            puts "After Update Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}"
-
-            break
+        moved_item.update_attribute(:position, new_position)
+        if direction == "down"
+          # validate_position_or_decrement()
+          @user.active_queue_items.each do |item|
+            unless item.valid?
+              item.update_attributes(position: item.position - 1)
+            end
+          end
+        else
+          non_moved_items = @user.active_queue_items.to_a
+          non_moved_items.delete(moved_item)
+          # validate_position_or_increment()
+          non_moved_items.each do |item|
+            unless item.valid?
+              item.update_attribute(:position, item.position + 1)
+            end
           end
         end
 

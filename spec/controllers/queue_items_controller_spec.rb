@@ -150,36 +150,62 @@ describe QueueItemsController do
     let!(:queue_item_4) { Fabricate(:queue_item, user: user) }
     let!(:queue_item_5) { Fabricate(:queue_item, user: user) }
 
-    subject { post 'reorder', user_id: user.id, queue: { queue_item_1.id => 1, queue_item_2.id => 2, queue_item_3.id => 2 , queue_item_4.id => 4 } }
 
     context "with a logged in user" do
       before { login_user user }
 
-      it "redirects to the index page" do
-        subject
-        expect(response).to redirect_to user_queue_items_path user
-      end
+      context "when a user moves an item up in the order" do
+        subject { post 'reorder', user_id: user.id, queue: { queue_item_1.id => 1, queue_item_2.id => 2, queue_item_3.id => 3 , queue_item_4.id => 2, queue_item_5.id  => 5 } }
 
-      context "when a user resets the position of the third item" do
-        it "sets the position of the third item to 2" do
+        it "redirects to the index page" do
           subject
-          expect(queue_item_3.reload.position).to eq 2
+          expect(response).to redirect_to user_queue_items_path user
         end
 
-        it "sets the position of the second item to 3" do
+        it "correctly sets the position of the changed item" do
           subject
-          expect(queue_item_2.reload.position).to eq 3
+          expect(queue_item_4.reload.position).to eq 2
         end
 
-        it "leaves the position of the first item alone" do
+        it "leaves alone items after the chaned item" do
+          subject
+          expect(queue_item_5.reload.position).to eq 5
+        end
+
+        it "leaves alone anything before the insertion point of the change" do
           subject
           expect(queue_item_1.reload.position).to eq 1
         end
 
-        it "leaves the position of the items after the change alone" do
+        it "correctly resets any item between the insertion point and the original position of the changed item" do
           subject
-          expect(queue_item_4.reload.position).to eq 4
+          expect(queue_item_2.reload.position).to eq 3
+          expect(queue_item_3.reload.position).to eq 4
+        end
+      end
+
+      context "when a user moves an item down in the order" do
+        subject { post 'reorder', user_id: user.id, queue: { queue_item_1.id => 1, queue_item_2.id => 4, queue_item_3.id => 3 , queue_item_4.id => 4, queue_item_5 => 5 } }
+
+        it "correctly sets the position of the changed item" do
+          subject
+          expect(queue_item_2.reload.position).to eq 4
+        end
+
+        it "leaves alone items before the original changed item position" do
+          subject
+          expect(queue_item_1.reload.position).to eq 1
+        end
+
+        it "leaves alone anything after the insertion point of the change" do
+          subject
           expect(queue_item_5.reload.position).to eq 5
+        end
+
+        it "correctly resets any item between the insertion point and the original position of the changed item" do
+          subject
+          expect(queue_item_3.reload.position).to eq 2
+          expect(queue_item_4.reload.position).to eq 3
         end
       end
     end
