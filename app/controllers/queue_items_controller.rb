@@ -58,15 +58,20 @@ class QueueItemsController < ApplicationController
         moved_item.update_attribute(:position, new_position)
         if direction == "down"
           # validate_position_or_decrement()
-          @user.active_queue_items.each do |item|
+          non_moved_items = @user.active_queue_items.to_a
+          non_moved_items = non_moved_items.reverse  #need to start validating from the other end
+          non_moved_items.delete(moved_item)
+
+          non_moved_items.each do |item|
             unless item.valid?
-              item.update_attributes(position: item.position - 1)
+              item.update_attribute(:position, item.position - 1)
             end
           end
         else
+          # validate_position_or_increment()
           non_moved_items = @user.active_queue_items.to_a
           non_moved_items.delete(moved_item)
-          # validate_position_or_increment()
+
           non_moved_items.each do |item|
             unless item.valid?
               item.update_attribute(:position, item.position + 1)

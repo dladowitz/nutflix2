@@ -6,7 +6,6 @@ class PositionValidator < ActiveModel::Validator
       active_items.delete(record) if active_items.include? record
 
       active_positions = active_items.map{|item| item.position}
-
       if active_positions.include? record.position
         record.errors[:position] << "needs to be unique across a user."
       end
