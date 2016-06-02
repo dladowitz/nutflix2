@@ -31,10 +31,6 @@ class QueueItem < ActiveRecord::Base
     self.active == false
   end
 
-  def update_queue_positions
-    # if
-
-  end
 
   private
 

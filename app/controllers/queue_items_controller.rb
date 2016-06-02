@@ -57,12 +57,12 @@ class QueueItemsController < ApplicationController
   end
 
   def reorder_queue_items
-    params[:queue].each do |queue_item_id, new_position|
-      moved_item = find_item_with_new_position(queue_item_id, new_position)
+    params[:queue].each do |item|
+      moved_item = find_item_with_new_position(item[:id], item[:new_position])
 
       if moved_item
-       direction = move_direction(moved_item, new_position.to_i)
-       moved_item.update_attribute(:position, new_position)
+       direction = move_direction(moved_item, item[:new_position].to_i)
+       moved_item.update_attribute(:position, item[:new_position].to_i)
        validate_or_reorder(direction, moved_item)
 
         break
@@ -73,7 +73,6 @@ class QueueItemsController < ApplicationController
   def find_item_with_new_position(queue_item_id, new_position)
     queue_item = QueueItem.find queue_item_id
     new_position = new_position.to_i
-    puts "Queue Item Video: #{queue_item.video.title} at position #{queue_item.position}" if @debug
 
     if queue_item.position != new_position
       return queue_item

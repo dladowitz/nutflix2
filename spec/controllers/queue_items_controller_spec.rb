@@ -155,7 +155,8 @@ describe QueueItemsController do
       before { login_user user }
 
       context "when a user moves an item up in the order" do
-        subject { post 'reorder', user_id: user.id, queue: { queue_item_1.id => 1, queue_item_2.id => 2, queue_item_3.id => 3 , queue_item_4.id => 2, queue_item_5.id  => 5 } }
+        subject { post 'reorder', user_id: user.id, queue: [{ "id" => queue_item_1.id, "new_position" => "1" }, { "id" => queue_item_2.id, "new_position" => "2" }, { "id" => queue_item_3.id, "new_position" => "3" }, { "id" => queue_item_4.id, "new_position" => "2" }, { "id" => queue_item_5.id, "new_position" => "5" }] }
+
 
         it "redirects to the index page" do
           subject
@@ -185,7 +186,7 @@ describe QueueItemsController do
       end
 
       context "when a user moves an item down in the order" do
-        subject { post 'reorder', user_id: user.id, queue: { queue_item_1.id => 1, queue_item_2.id => 4, queue_item_3.id => 3 , queue_item_4.id => 4, queue_item_5 => 5 } }
+        subject { post 'reorder', user_id: user.id, queue: [{ "id" => queue_item_1.id, "new_position" => "1" }, { "id" => queue_item_2.id, "new_position" => "4" }, { "id" => queue_item_3.id, "new_position" => "3" }, { "id" => queue_item_4.id, "new_position" => "4" }, { "id" => queue_item_5.id, "new_position" => "5" }] }
 
         it "correctly sets the position of the changed item" do
           subject

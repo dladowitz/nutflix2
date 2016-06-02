@@ -18,8 +18,9 @@
             %tbody
               - @queue_items.each do |queue_item|
                 %tr
+                  = hidden_field_tag "queue[][id]", queue_item.id
                   %td
-                    = number_field_tag "queue[#{queue_item.id}]", queue_item.position, class: "form-control", data: {:queue_item_id => queue_item.id }
+                    = number_field_tag "queue[][new_position]", queue_item.position, class: "form-control", data: {:queue_item_id => queue_item.id }
                   %td
                     = link_to queue_item.video.title, queue_item.video
                   %td
