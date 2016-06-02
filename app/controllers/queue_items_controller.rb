@@ -43,6 +43,8 @@ class QueueItemsController < ApplicationController
   def reorder
     reorder_queue_items
 
+    update_ratings
+
     redirect_to user_queue_items_path @user
   end
 
@@ -117,6 +119,14 @@ class QueueItemsController < ApplicationController
       unless item.valid?
         item.update_attribute(:position, item.position + 1)
       end
+    end
+  end
+
+  def  update_ratings
+    params[:queue].each do |form_item|
+      queue_item = QueueItem.find form_item[:id]
+
+      queue_item.update_or_create_review form_item[:new_rating]
     end
   end
 end

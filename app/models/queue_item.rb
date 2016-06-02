@@ -32,9 +32,22 @@ class QueueItem < ActiveRecord::Base
   end
 
   # TODO create test
-  def rating
-    review = video.reviews.where("user_id = #{user.id}").order(:created_at).last
-    review ? review.rating : nil
+  def current_rating
+    last_review ? last_review.rating : nil
+  end
+
+  def last_review
+    video.reviews.where("user_id = #{user.id}").order(:created_at).last
+  end
+
+  def update_or_create_review(new_rating)
+    if new_rating == "0"
+      return
+    elsif last_review
+      last_review.update_attributes(rating: new_rating)
+    else
+      user.reviews.create(rating: new_rating, video: video)
+    end
   end
 
 

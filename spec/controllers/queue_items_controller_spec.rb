@@ -209,6 +209,36 @@ describe QueueItemsController do
           expect(queue_item_4.reload.position).to eq 3
         end
       end
+
+      context "when a user adds a rating to an unrated queue item" do
+        subject { post 'reorder', user_id: user.id, queue: [{ "id" => queue_item_1.id, "new_position" => "1", "new_rating" => "5" }, { "id" => queue_item_2.id, "new_position" => "4", "new_rating" => "0" } ] }
+
+        it "should create a review for the user and video" do
+          subject
+          expect(queue_item_1.reload.current_rating).to eq 5
+        end
+
+        it "should not create a review for other queue items" do
+          subject
+          expect(queue_item_2.reload.current_rating).to eq nil
+        end
+
+      end
+
+      context "when a user adds a rating to a previously rated queue item" do
+        before { queue_item_1.user.reviews.create(rating: 2, video: queue_item_1.video) }
+        subject { post 'reorder', user_id: user.id, queue: [{ "id" => queue_item_1.id, "new_position" => "1", "new_rating" => "5" }, { "id" => queue_item_2.id, "new_position" => "4", "new_rating" => "0" } ] }
+
+        it "should update the correct review" do
+          subject
+          expect(queue_item_1.reload.current_rating).to eq 5
+        end
+
+        it "should not create a review for other queue items" do
+          subject
+          expect(queue_item_2.reload.current_rating).to eq nil
+        end
+      end
     end
   end
 end

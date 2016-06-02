@@ -29,17 +29,17 @@
 
                     -# I fucking hate select tags. I'm sure there is a better way.
                     %select.form-group(name="queue[][new_rating]")
-                      - if queue_item.rating
+                      - if queue_item.current_rating
                         %option(value="#{queue_item.rating}" selected) #{queue_item.rating} Stars
-                        - unless queue_item.rating == 5
+                        - unless queue_item.rcurrent_ating == 5
                           %option(value="5") 5 Stars
-                        - unless queue_item.rating == 4
+                        - unless queue_item.current_rating == 4
                           %option(value="4") 4 Stars
-                        - unless queue_item.rating == 3
+                        - unless queue_item.rcurrent_ating == 3
                           %option(value="3") 3 Stars
-                        - unless queue_item.rating == 2
+                        - unless queue_item.current_rating == 2
                           %option(value="2") 2 Stars
-                        - unless queue_item.rating == 1
+                        - unless queue_item.current_rating == 1
                           %option(value="1") 1 Stars
                       -else
                         %option(value="0") Not Rated
