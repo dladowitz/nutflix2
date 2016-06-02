@@ -1,17 +1,19 @@
 require 'spec_helper'
 
 describe VideosController do
-  let(:user) { Fabricate(:user) }
+  let(:user)   { Fabricate(:user) }
   let!(:video) { Fabricate(:video)}
+  before       { login_user user }
 
   describe "GET 'index'" do
     subject { get 'index' }
 
+    it_behaves_like "requires sign in" do
+      let(:action) { subject }
+    end
+
     context "with a logged in user" do
-      before do
-        session[:id] = user.id
-        subject
-      end
+      before { subject }
 
       it "returns http success" do
         response.should be_success
@@ -29,25 +31,17 @@ describe VideosController do
         expect(assigns(:categories_w_videos)["#{video.category.name}"]).to eq [video]
       end
     end
-
-    context "with no user logged in" do
-      before { subject }
-
-      it "redirects_to the sign_in_path" do
-        expect(response).to redirect_to sign_in_path
-        expect(flash[:danger]).to eq "Slow down there, you need to sign in first."
-      end
-    end
   end
 
   describe "GET 'Show'" do
     subject { get 'show', id: video.id }
 
+    it_behaves_like "requires sign in" do
+      let(:action) { subject }
+    end
+
     context "with a logged in user" do
-      before {
-        session[:id] = user.id
-        subject
-      }
+      before { subject }
 
       it "returns http succss" do
         response.should be_success
@@ -70,25 +64,16 @@ describe VideosController do
         expect(assigns(:review).user).to eq user
       end
     end
-
-    context "with no user logged in" do
-      before { subject }
-
-      it "redirects_to the sign_in_path" do
-        expect(response).to redirect_to sign_in_path
-        expect(flash[:danger]).to eq "Slow down there, you need to sign in first."
-      end
-    end
   end
 
   describe "GET 'Search'" do
     let!(:video2) { Fabricate(:video, title: video.title + ": 2") }
 
-    context "with a logged in user" do
-      before {
-        session[:id] = user.id
-      }
+    it_behaves_like "requires sign in" do
+      let(:action) { get 'search', search: video.title }
+    end
 
+    context "with a logged in user" do
       it "returns http succss" do
         get 'search', search: video.title
         response.should be_success
@@ -125,14 +110,6 @@ describe VideosController do
           get 'search', search: video.title
           expect(assigns(:videos)).to have(2).items
         end
-      end
-    end
-
-    context "with no user logged in" do
-      it "redirects_to the sign_in_path" do
-        get 'search', search: video.title
-        expect(response).to redirect_to sign_in_path
-        expect(flash[:danger]).to eq "Slow down there, you need to sign in first."
       end
     end
   end
