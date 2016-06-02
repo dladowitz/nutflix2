@@ -31,6 +31,12 @@ class QueueItem < ActiveRecord::Base
     self.active == false
   end
 
+  # TODO create test
+  def rating
+    review = video.reviews.where("user_id = #{user.id}").order(:created_at).last
+    review ? review.rating : nil
+  end
+
 
   private
 
