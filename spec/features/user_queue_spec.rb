@@ -7,21 +7,21 @@ feature "User adds video to queue" do
   end
 
   scenario "with existing user and video" do
-    visiit sign_in_path
-    fill_in "session[email]", with: "tony@starklabs.com"
-    fill_in "session[password]", with: "asdfasdf"
+    visit sign_in_path
+    fill_in "session[email]", with: @user.email
+    fill_in "session[password]", with: @user.password
     click_button "Sign in"
 
     # On Videos Page
-    find(:xpath, "//a[@href='/videos/1']").click
+    find(:xpath, "//a[@href='/videos/#{@video.id}']").click
 
     # On Video Page
     page.should have_content @video.title
-    click_button "+ My Queue"
+    click_link "+ My Queue"
 
     # On My Queue Page
     page.should have_content "My Queue"
-    page.should have_contet @video.title
+    page.should have_content @video.title
     click_link @video.title
 
     # On Video Page
