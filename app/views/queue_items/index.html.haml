@@ -55,5 +55,5 @@
                     = button_to user_queue_item_path(current_user.id, queue_item.id), class: "btn btn-default", method: :delete do
                       %i.glyphicon.glyphicon-remove
 
-          = submit_tag "Update Instant Queue", class: "btn btn-default"
+          = submit_tag "Update Instant Queue", class: "btn btn-default", id: "update-queue"
           -# 'product[prop_hash][][name]'
