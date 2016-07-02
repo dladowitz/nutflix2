@@ -6,3 +6,7 @@ def sign_in_user_through_form(user)
 
   page.should have_content "Successful signin"
 end
+
+def sign_out_through_link
+  click_link "Sign Out"
+end
