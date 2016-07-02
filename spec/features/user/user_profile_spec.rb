@@ -22,7 +22,7 @@ feature "User views profile page" do
     sign_in_user_through_form(@user2)
     visit "/users/#{@user.id}"
     expect_correct_user_profile(@user)
-    # expect_correct_queue_count(@user)
+    expect_correct_queue_count(@user)
     # expect_correct_review_count(@user)
     save_and_open_page
   end
@@ -37,6 +37,14 @@ feature "User views profile page" do
 
   def expect_correct_user_profile(user)
     page.should have_content "#{user.full_name}'s video collection"
+  end
 
+  def expect_correct_queue_count(user)
+    page.should have_content "(#{user.queue_items.count})"
+    user.queue_items.each do |queue_item|
+      #TOOD should really make this check for a TR with title and category
+      page.should have_content queue_item.video.title
+      page.should have_content queue_item.video.category.name
+    end
   end
 end
