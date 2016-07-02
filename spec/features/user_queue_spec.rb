@@ -24,13 +24,11 @@ feature "User interacts with queue" do
 
     update_video_position @video3, 1
 
-
-    # TODO Not sure why click_button "Update Instant Queue" does't work
+    # TODO: Not sure why click_button "Update Instant Queue" does't work
     # expect_video_position @video3, 1
     # expect_video_position @video1, 2
     # expect_video_position @video2, 3
   end
-
 
   def expect_video_in_queue(video)
     page.should have_content video.title

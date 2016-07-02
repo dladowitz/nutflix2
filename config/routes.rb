@@ -22,7 +22,7 @@ Myflix::Application.routes.draw do
   end
 
   # Nested Resources
-  resources :users, only: [:new, :create] do
+  resources :users, only: [:new, :create, :show] do
     resources :queue_items, only: [:index, :create, :destroy] do
       collection do
         post "reorder"

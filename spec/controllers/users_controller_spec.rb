@@ -1,6 +1,28 @@
 require 'spec_helper'
 
 describe UsersController do
+  describe "GET 'show'" do
+    let(:user)  { Fabricate(:user) }
+    subject { get 'show', id: user.id }
+
+    before do
+      login_user user
+      subject
+    end
+
+    it "returns http success" do
+      expect(response).to be_success
+    end
+
+    it "renders the show template" do
+      expect(response).to render_template :show
+    end
+
+    it "returns the correct user object" do
+      expect(assigns(:user).full_name).to eq user.full_name
+    end
+  end
+
   describe "GET 'new'" do
     subject { get 'new' }
     before { subject }
