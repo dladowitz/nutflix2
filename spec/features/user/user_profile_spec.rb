@@ -22,13 +22,13 @@ feature "User views profile page" do
     sign_in_user_through_form(@user2)
     visit "/users/#{@user.id}"
     expect_correct_user_profile(@user)
-    expect_correct_queue_count(@user)
-    # expect_correct_review_count(@user)
+    expect_correct_queue_items(@user)
+    expect_correct_reviews(@user)
     save_and_open_page
   end
 
   def write_review(video, user)
-    video.reviews.create(user_id: user.id, rating: 4, text: "Go see this now!")
+    video.reviews.create(user_id: user.id, rating: 4, text: Faker::Hacker.say_something_smart)
   end
 
   def add_video_to_queue_via_db(video, user)
@@ -39,12 +39,21 @@ feature "User views profile page" do
     page.should have_content "#{user.full_name}'s video collection"
   end
 
-  def expect_correct_queue_count(user)
-    page.should have_content "(#{user.queue_items.count})"
+  def expect_correct_queue_items(user)
+    page.should have_content "video collections (#{user.queue_items.count})"
     user.queue_items.each do |queue_item|
       #TOOD should really make this check for a TR with title and category
       page.should have_content queue_item.video.title
       page.should have_content queue_item.video.category.name
+    end
+  end
+
+  def expect_correct_reviews(user)
+    page.should have_content "Reviews (#{user.reviews.count})"
+    user.reviews.each do |review|
+      page.should have_link(review.video.title, href: video_path(review.video))
+      page.should have_content "Rating: #{review.rating} / 5"
+      page.should have_content review.text
     end
   end
 end
